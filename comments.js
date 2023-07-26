@@ -30,3 +30,19 @@ app.post('/comments', function(req, res) {
     console.log(req.body);
     var newComment = {
         id: Date.now(), }});
+
+            fs.readFile(filePath, {encoding: 'utf-8'}, function(err, data) {
+        if (!err) {
+            var obj = JSON.parse(data);
+            obj.push(newComment);
+            fs.writeFile(filePath, JSON.stringify(obj), function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('The file was saved!');
+                }
+            });
+        } else {
+            console.log(err);
+        }
+    });
