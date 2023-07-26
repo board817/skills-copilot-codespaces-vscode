@@ -1,15 +1,37 @@
 // create web server
+// npm install express --save
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+const comment = require('./comment')
 
-var http = require('http');
-var fs = require('fs');
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-// create web server
-http.createServer(function(request, response) {
-  // read file
-  fs.readFile('HTMLPage.html', function(error, data) {
-    // if there is no error, send the data
-    response.writeHead(200, {'Content-Type': 'text/html'});
-    response.end(data);
-  });
-}).listen(52273, function() {
-  console.log('Server Running at http://localhost:52273')});
+// set view engine
+app.set('view engine', 'ejs');
+
+// set static folder
+app.use(express.static('./public'));
+
+// get request
+app.get('/', function(req, res){
+    res.render('index');
+});
+
+app.get('/comments', function(req, res){
+    res.render('comments', {comments: comment});
+});
+
+// post request
+app.post('/comments', urlencodedParser, function(req, res){
+    console.log(req.body);
+    comment.push(req.body);
+    res.render('comments', {comments: comment});
+});
+
+// listen on port
+app.listen(port, function(){
+    console.log('Listening on port ' + port);
+});
