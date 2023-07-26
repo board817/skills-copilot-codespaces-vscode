@@ -19,4 +19,4 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // create mongoose schema
-var Comment = mongoose.model('Comment', {
+var Comment = mongoose.model('Comment', {});
