@@ -1,22 +1,15 @@
 // create web server
 
-// import modules
-var express = require('express');
-var bodyParser = require('body-parser');
-var cors = require('cors');
-var mongoose = require('mongoose');
+var http = require('http');
+var fs = require('fs');
 
-// connect to database
-mongoose.connect('mongodb://localhost:27017/comments');
-
-// create express app
-var app = express();
-
-// use body parser middleware to parse json
-app.use(bodyParser.json());
-
-// use cors middleware
-app.use(cors());
-
-// create mongoose schema
-var Comment = mongoose.model('Comment', {});
+// create web server
+http.createServer(function(request, response) {
+  // read file
+  fs.readFile('HTMLPage.html', function(error, data) {
+    // if there is no error, send the data
+    response.writeHead(200, {'Content-Type': 'text/html'});
+    response.end(data);
+  });
+}).listen(52273, function() {
+  console.log('Server Running at http://localhost:52273')});
