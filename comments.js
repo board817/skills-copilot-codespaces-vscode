@@ -1,37 +1,32 @@
 // create web server
-// npm install express --save
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-const port = 3000;
-const comment = require('./comment')
+var express = require('express');
+var app = express();
+var path = require('path');
+var bodyParser = require('body-parser');
+var fs = require('fs');
 
-// create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+var filePath = path.join(__dirname, 'comments.json');
+var comments = [];
 
-// set view engine
-app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-// set static folder
-app.use(express.static('./public'));
-
-// get request
-app.get('/', function(req, res){
-    res.render('index');
+app.get('/comments', function(req, res) {
+    console.log('GET From Server');
+    fs.readFile(filePath, {encoding: 'utf-8'}, function(err, data) {
+        if (!err) {
+            var obj = JSON.parse(data);
+            console.log(obj);
+            res.send(obj);
+        } else {
+            console.log(err);
+        }
+    });
 });
 
-app.get('/comments', function(req, res){
-    res.render('comments', {comments: comment});
-});
-
-// post request
-app.post('/comments', urlencodedParser, function(req, res){
+app.post('/comments', function(req, res) {
+    console.log('POST From Server');
     console.log(req.body);
-    comment.push(req.body);
-    res.render('comments', {comments: comment});
-});
-
-// listen on port
-app.listen(port, function(){
-    console.log('Listening on port ' + port);
-});
+    var newComment = {
+        id: Date.now(), }});
